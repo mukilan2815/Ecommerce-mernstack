@@ -8,7 +8,7 @@ const User = () => {
       const token = localStorage.getItem("Token");
       const userId = localStorage.getItem("UserId");
       const response = await axios.get(
-        `http://localhost:3001/api/user/${userId}`,
+        `https://backend-mern-hbxj.onrender.com/api/user/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",

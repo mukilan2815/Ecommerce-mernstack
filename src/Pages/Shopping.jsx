@@ -6,7 +6,7 @@ import { UserContext } from "../Usercontext";
 const Shopping = () => {
   const { searchquery } = useContext(UserContext);
   const response = axios.get(
-    `http://localhost:3001/api/products/${searchquery}`,
+    `https://backend-mern-hbxj.onrender.com/api/products/${searchquery}`,
     {
       headers: {
         "Content-Type": "application/json",

@@ -30,7 +30,7 @@ const Register = () => {
     if (formData) {
       try {
         const response = await axios.post(
-          "http://localhost:3001/api/register",
+          "https://backend-mern-hbxj.onrender.com/api/register",
           formData,
           {
             headers: {
