@@ -1,18 +1,29 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
-import { UserContext } from "../Usercontext";
 
 const Shopping = () => {
-  const { searchquery } = useContext(UserContext);
-  const response = axios.get(
-    `https://backend-mern-hbxj.onrender.com/api/products/${searchquery}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://backend-mern-hbxj.onrender.com/api/products`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -79,5 +90,4 @@ const Shopping = () => {
     </div>
   );
 };
-
 export default Shopping;

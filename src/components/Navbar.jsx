@@ -11,7 +11,6 @@ import "../index.css";
 import { UserContext } from "../Usercontext";
 const Navbar = () => {
   const [login, setLogin] = React.useState(false);
-  const [query, setquery] = useContext(UserContext);
   React.useEffect(() => {
     const token = localStorage.getItem("Token");
     if (token) {
@@ -33,9 +32,7 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search.."
-            onChange={(e) => {
-              setquery(e.target.value);
-            }}
+            
             className="border outline-none rounded-lg px-10 py-2  pr-10"
           />
         </div>
