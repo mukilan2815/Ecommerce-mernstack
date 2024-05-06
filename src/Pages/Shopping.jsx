@@ -1,34 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
 const Shopping = () => {
+  const [products, setProducts] = useState([]);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const uploadData = async () => {
       try {
-        const response = await axios.get(
-          `https://backend-mern-hbxj.onrender.com/api/products`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        console.log(response);
+        const response = await axios.get(`http://localhost:3001/api/products`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        setProducts(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error(error);
       }
     };
-
-    fetchData();
+    uploadData();
   }, []);
 
   return (
     <div>
       <Navbar />
-      <div className="flex justify-center">
-        <div className="w-1/3 p-4 bg-white rounded-lg shadow-md">
+      <div className="flex justify-start">
+        <div className="w-1/4 p-4 bg-white rounded-lg shadow-md">
           <h1 className="text-xl font-bold mb-4">Filter</h1>
           <div className="mb-4">
             <p className="font-bold">Price</p>
@@ -77,7 +76,7 @@ const Shopping = () => {
           </div>
           <div className="mb-4">
             <p className="font-bold">Delivery</p>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2">
+            <button className="bg-blue-500 m-2 text-white px-4 py-2 rounded-md mr-2">
               Get it by Today
             </button>
             <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
@@ -85,7 +84,30 @@ const Shopping = () => {
             </button>
           </div>
         </div>
-        <div></div>
+        <div className="ml-5">
+          <div className="grid grid-cols-3 gap-4">
+            {products.map((product) => (
+              <div key={product.id} className="flex flex-col items-center mb-4">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-32 h-32 object-cover rounded-md"
+                />
+                <h2 className="text-xl font-bold mt-2">{product.name}</h2>
+                <p>{product.description}</p>
+                <p className="font-bold">${product.price}</p>
+                <div className="flex justify-between">
+                  <button className="bg-blue-500 mr-2 text-white px-3 py-2 rounded-md mt-2">
+                    Add to Cart
+                  </button>
+                  <button className="bg-green-500 text-white px-3 py-2 rounded-md mt-2">
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

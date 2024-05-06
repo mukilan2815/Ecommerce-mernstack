@@ -1,28 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+
 const User = () => {
   const [data, setData] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("Token");
       const userId = localStorage.getItem("UserId");
-      const response = await axios.get(
-        `https://backend-mern-hbxj.onrender.com/api/user/${userId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setData(response.data);
+      try {
+        const response = await axios.get(
+          `https://backend-mern-hbxj.onrender.com/api/user/${userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setData(response.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
     };
+
     fetchData();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
       <Navbar />
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>

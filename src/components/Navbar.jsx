@@ -7,8 +7,10 @@ import {
   faSearch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 import "../index.css";
 import { UserContext } from "../Usercontext";
+
 const Navbar = () => {
   const [login, setLogin] = React.useState(false);
   React.useEffect(() => {
@@ -16,6 +18,38 @@ const Navbar = () => {
     if (token) {
       setLogin(true);
     }
+  }, []);
+
+  const fetchUsername = async (userId) => {
+    const response = await axios.get(
+      `https://backend-mern-hbxj.onrender.com/api/user/${userId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        },
+      }
+    );
+    return response.data.firstName;
+  };
+
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = localStorage.getItem("UserId");
+      if (userId) {
+        try {
+          const username = await fetchUsername(userId);
+          setUsername(username);
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching username:", error);
+          setLoading(false);
+        }
+      }
+    };
+    fetchUserData();
   }, []);
 
   return (
@@ -32,11 +66,10 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search.."
-            
             className="border outline-none rounded-lg px-10 py-2  pr-10"
           />
         </div>
-        <Link to="/shop" className="no-underline text-black">
+        <Link to="/products" className="no-underline text-black">
           Shop
         </Link>
         <FontAwesomeIcon icon={faCartShopping} />
@@ -44,7 +77,8 @@ const Navbar = () => {
           <FontAwesomeIcon icon={faUser} />
         </Link>
         <FontAwesomeIcon icon={faHeadphonesAlt} />
-        {login ? null : (
+        {loading ? <span>Loading...</span> : <span>Welcome, {username}</span>}
+        {!login && (
           <Link
             to="/login"
             className="bg-blue-500 px-4 text-white no-underline rounded-md py-2 "
