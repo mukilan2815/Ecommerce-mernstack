@@ -1,27 +1,39 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
-const Shopping = () => {
+const Shopping = (props) => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-
+  const [isloading, setIsLoading] = useState(true);
+  let { searchQuery } = useParams();
+  searchQuery = searchQuery || "";
   useEffect(() => {
     const uploadData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/products`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(
+          `http://localhost:3001/api/products/${searchQuery}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         setProducts(Array.isArray(response.data) ? response.data : []);
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
     uploadData();
-  }, []);
+  }, [searchQuery]);
+
+  const singleproduct = (key) => {
+    navigate(`/singleproduct/${key}`);
+  };
 
   return (
     <div>
@@ -35,6 +47,7 @@ const Shopping = () => {
               <label className="mr-2">Min price</label>
               <input
                 className="border border-gray-300 px-2 py-1 rounded"
+                name="minprice"
                 type="number"
               />
             </div>
@@ -84,30 +97,42 @@ const Shopping = () => {
             </button>
           </div>
         </div>
-        <div className="ml-5">
-          <div className="grid grid-cols-3 gap-4">
-            {products.map((product) => (
-              <div key={product.id} className="flex flex-col items-center mb-4">
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-32 h-32 object-cover rounded-md"
-                />
-                <h2 className="text-xl font-bold mt-2">{product.name}</h2>
-                <p>{product.description}</p>
-                <p className="font-bold">${product.price}</p>
-                <div className="flex justify-between">
-                  <button className="bg-blue-500 mr-2 text-white px-3 py-2 rounded-md mt-2">
-                    Add to Cart
-                  </button>
-                  <button className="bg-green-500 text-white px-3 py-2 rounded-md mt-2">
-                    Buy Now
-                  </button>
+        {isloading ? (
+          <div className="animate-spin h-10 w-8 border-3 border-blue-600 bg-transparent absolute left-2/4 top-2/4 rounded-full bg-blue-500"></div>
+        ) : (
+          <div className="ml-5">
+            <div className="grid grid-cols-3 gap-4">
+              {products.map((product) => (
+                <div
+                  key={product._id}
+                  className="flex flex-col items-center mb-4"
+                >
+                  <div
+                    className="flex flex-col items-center"
+                    onClick={() => singleproduct(product._id)}
+                  >
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-32 h-32 object-contain rounded-md"
+                    />
+                    <h2 className="text-xl font-bold mt-2">{product.name}</h2>
+                    <p>{product.description}</p>
+                    <p className="font-bold">₹{product.price}</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <button className="bg-blue-500 hover:bg-blue-600 mr-2 text-white px-3 py-2 rounded-md mt-2">
+                      Add to Cart
+                    </button>
+                    <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md mt-2">
+                      Buy Now
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

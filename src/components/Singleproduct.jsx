@@ -1,19 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-const Singleproduct = (props) => {
-  const { name, price, image } = props;
+const Singleproduct = () => {
+  const [productData, setProductData] = useState(null);
+  const { id } = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3001/api/singleproduct/${id}`)
+      .then((response) => {
+        setProductData(response.data);
+        console.log("response.data", response.data);
+      })
+      .catch((error) => console.log("error", error));
+  }, [id]);
+
+  if (!productData) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="p-2 mx-4 my-2 rounded-lg">
-      <div className="bg-white rounded-lg p-2 flex flex-col justify-center items-center">
+    <div className="flex justify-center items-center h-screen">
+      <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg">
         <img
-          src={image}
-          alt={name}
-          className=" object-contain shadow-sm shadow-black mb-2"
-          style={{ width: "200px", height: "200px" }}
+          src={productData.imageUrl}
+          alt={productData.name}
+          className="w-full h-64 object-cover rounded-t-lg"
         />
-        <h2 className="text-lg font-bold mb-1">{name}</h2>
-        <p className="text-gray-600">₹{price}</p>
+        <div className="p-6">
+          <h2 className="text-2xl font-semibold mb-2">{productData.name}</h2>
+          <p className="text-gray-600">₹{productData.price}</p>
+        </div>
       </div>
     </div>
   );

@@ -28,6 +28,12 @@ const User = () => {
     fetchData();
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem("Token");
+    localStorage.removeItem("UserId");
+    window.location.href = "/";
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
       <Navbar />
@@ -57,8 +63,16 @@ const User = () => {
                     href="/orders"
                     className="text-cyan-600 hover:text-cyan-700"
                   >
-                    {" "}
                     View your orders &rarr;{" "}
+                  </a>
+                </p>
+                <p>
+                  <a
+                    href="/"
+                    className="text-cyan-600 hover:text-cyan-700"
+                    onClick={logout}
+                  >
+                    Logout &rarr;{" "}
                   </a>
                 </p>
               </div>
