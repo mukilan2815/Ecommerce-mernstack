@@ -10,7 +10,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/login",
+        "https://backend-mern-hbxj.onrender.com/api/login",
         {
           email: document.getElementById("email").value,
           password: document.getElementById("password").value,

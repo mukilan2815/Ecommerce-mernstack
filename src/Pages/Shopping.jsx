@@ -13,7 +13,7 @@ const Shopping = (props) => {
     const uploadData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/products/${searchQuery}`,
+          `https://backend-mern-hbxj.onrender.com/api/products/${searchQuery}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -35,6 +35,16 @@ const Shopping = (props) => {
     navigate(`/singleproduct/${key}`);
   };
 
+  const addcart = (key) => {
+    axios
+      .post(`https://backend-mern-hbxj.onrender.com/api/addcart/${key}`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   return (
     <div>
       <Navbar />
@@ -108,7 +118,7 @@ const Shopping = (props) => {
                   className="flex flex-col items-center mb-4"
                 >
                   <div
-                    className="flex flex-col items-center"
+                    className="flex flex-col items-center cursor-pointer p-4 bg-white"
                     onClick={() => singleproduct(product._id)}
                   >
                     <img
@@ -121,7 +131,12 @@ const Shopping = (props) => {
                     <p className="font-bold">₹{product.price}</p>
                   </div>
                   <div className="flex justify-between">
-                    <button className="bg-blue-500 hover:bg-blue-600 mr-2 text-white px-3 py-2 rounded-md mt-2">
+                    <button
+                      onClick={() => {
+                        addcart(product._id);
+                      }}
+                      className="bg-blue-500 hover:bg-blue-600 mr-2 text-white px-3 py-2 rounded-md mt-2"
+                    >
                       Add to Cart
                     </button>
                     <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md mt-2">
