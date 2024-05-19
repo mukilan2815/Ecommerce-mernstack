@@ -13,7 +13,7 @@ const Shopping = (props) => {
     const uploadData = async () => {
       try {
         const response = await axios.get(
-          `https://backend-mern-hbxj.onrender.com/api/products/${searchQuery}`,
+          `http://localhost:3001/api/products/${searchQuery}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -37,7 +37,7 @@ const Shopping = (props) => {
 
   const addcart = (key) => {
     axios
-      .post(`https://backend-mern-hbxj.onrender.com/api/addcart/${key}`)
+      .post(`http://localhost:3001/api/addcart/${key}`)
       .then((response) => {
         console.log(response.data);
       })

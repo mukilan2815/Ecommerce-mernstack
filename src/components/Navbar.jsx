@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const fetchUsername = async (userId) => {
     const response = await axios.get(
-      `https://backend-mern-hbxj.onrender.com/api/user/${userId}`,
+      `http://localhost:3001/api/user/${userId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -99,7 +99,7 @@ const Navbar = () => {
         <Link to="/user" className="text-black">
           <FontAwesomeIcon icon={faUser} />
         </Link>
-        {loading ? <span>Login first</span> : <span>Welcome, {username}</span>}
+        {loading ? <></> : <span>Welcome, {username} !</span>}
         {!login && (
           <Link
             to="/login"
