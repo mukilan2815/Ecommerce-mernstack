@@ -8,7 +8,7 @@ const Singleproduct = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/api/singleproduct/${id}`)
+      .get(`https://backend-mern-hbxj.onrender.com/api/singleproduct/${id}`)
       .then((response) => {
         setProductData(response.data);
         console.log("response.data", response.data);
